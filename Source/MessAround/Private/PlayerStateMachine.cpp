@@ -35,6 +35,7 @@ void APlayerStateMachine::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 	InputComponent->BindAxis(TEXT("Forward"), this, &APlayerStateMachine::GetForward);
 	InputComponent->BindAxis(TEXT("Right"), this, &APlayerStateMachine::GetRight);
+	InputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &APlayerStateMachine::Jump);
 }
 
 void APlayerStateMachine::GetForward(float value)
@@ -46,4 +47,10 @@ void APlayerStateMachine::GetRight(float value)
 {
 	moveInput.Y = FMath::Clamp<float>(value, -1, 1);
 }
+
+void APlayerStateMachine::Jump()
+{
+	doJump = true;
+}
+
 

@@ -78,7 +78,8 @@ void UStateMachine::RevertState()
 UState* UStateMachine::CheckTransitions(TArray<class UTransition*>* transitions, UObject* obj)
 {	//Loop over the given transitions
 	for (auto* trans : *transitions)
-	{	//Return the first transition that passes
+	{	
+		//Return the first transition that passes
 		if (trans->ShouldPass(obj))
 			return trans->targetState;
 	}

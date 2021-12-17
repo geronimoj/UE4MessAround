@@ -21,12 +21,15 @@ public:
 	/// <summary>
 	/// Stores the players moveVector in world space
 	/// </summary>
+	UPROPERTY(BlueprintReadOnly)
 	FVector moveVector;
 	/// <summary>
 	/// Is the character on the ground
 	/// </summary>
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool onGround = true;
+
+	bool doJump = false;
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,4 +45,5 @@ public:
 private:
 	void GetForward(float value);
 	void GetRight(float value);
+	void Jump();
 };
