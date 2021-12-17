@@ -11,15 +11,13 @@ void UForceMove::Tick(float deltaTime, UObject* obj)
 	if (pawn == nullptr)
 		return;
 
-	FVector dir = pawn->GetActorForwardVector();
-	dir.Z = 0;
+	FVector dir = FVector::VectorPlaneProject(pawn->GetActorForwardVector(), FVector::UpVector);
 	dir.Normalize();
 	//Apply change to moveVector including deltatime, input & speed
 	pawn->moveVector += dir * (force * pawn->moveInput.X * deltaTime);
 
-		//Repeat for right
-		dir = pawn->GetActorRightVector();
-	dir.Z = 0;
+	//Repeat for right
+	dir = FVector::VectorPlaneProject(pawn->GetActorRightVector(), FVector::UpVector);
 	dir.Normalize();
 
 	pawn->moveVector += dir * (force * pawn->moveInput.Y * deltaTime);
