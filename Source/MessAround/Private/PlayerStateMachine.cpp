@@ -22,7 +22,10 @@ void APlayerStateMachine::BeginPlay()
 void APlayerStateMachine::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	//Get the final location
+	FVector endPos = GetActorLocation() + (moveVector * DeltaTime);
+	//Move the actor
+	SetActorLocation(endPos, true);
 }
 
 // Called to bind functionality to input
@@ -30,5 +33,17 @@ void APlayerStateMachine::SetupPlayerInputComponent(UInputComponent* PlayerInput
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	InputComponent->BindAxis(TEXT("Forward"), this, &APlayerStateMachine::GetForward);
+	InputComponent->BindAxis(TEXT("Right"), this, &APlayerStateMachine::GetRight);
+}
+
+void APlayerStateMachine::GetForward(float value)
+{
+	moveInput.X = FMath::Clamp<float>(value, -1, 1);
+}
+
+void APlayerStateMachine::GetRight(float value)
+{
+	moveInput.Y = FMath::Clamp<float>(value, -1, 1);
 }
 

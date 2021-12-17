@@ -15,6 +15,19 @@ public:
 	// Sets default values for this pawn's properties
 	APlayerStateMachine();
 
+	UPROPERTY(EditAnywhere)
+	FVector moveInput;
+
+	/// <summary>
+	/// Stores the players moveVector in world space
+	/// </summary>
+	FVector moveVector;
+	/// <summary>
+	/// Is the character on the ground
+	/// </summary>
+	UPROPERTY(BlueprintReadWrite)
+	bool onGround = true;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,4 +39,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+	void GetForward(float value);
+	void GetRight(float value);
 };

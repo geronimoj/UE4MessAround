@@ -31,7 +31,7 @@ public:
 	/// <summary>
 	/// The object the state machine is running on
 	/// </summary>
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UObject* targetObject;
 	/// <summary>
 	/// The transitions to always check
