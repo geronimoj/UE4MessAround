@@ -14,7 +14,6 @@ void ULinearMove::Tick(float deltaTime, UObject* obj)
 	pawn->moveVector.X = 0;
 	pawn->moveVector.Y = 0;
 
-	UE_LOG(LogTemp, Warning, TEXT("Forward Vector, %s"), *pawn->forward.ToString());
 	//Only take horizontal component of vector
 	////////////Update to use projections
 	FVector dir = FVector::VectorPlaneProject(pawn->forward, FVector::UpVector);
