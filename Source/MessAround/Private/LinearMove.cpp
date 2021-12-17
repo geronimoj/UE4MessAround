@@ -13,16 +13,18 @@ void ULinearMove::Tick(float deltaTime, UObject* obj)
 	//Reset horizontal movement
 	pawn->moveVector.X = 0;
 	pawn->moveVector.Y = 0;
+
+	UE_LOG(LogTemp, Warning, TEXT("Forward Vector, %s"), *pawn->forward.ToString());
 	//Only take horizontal component of vector
 	////////////Update to use projections
-	FVector dir = FVector::VectorPlaneProject(pawn->GetActorForwardVector(), FVector::UpVector);
+	FVector dir = FVector::VectorPlaneProject(pawn->forward, FVector::UpVector);
 	dir.Normalize();
 
 	//Apply change to moveVector including deltatime, input & speed
 	pawn->moveVector += dir * (speed * pawn->moveInput.X);
 
 	//Repeat for right
-	dir = FVector::VectorPlaneProject(pawn->GetActorRightVector(), FVector::UpVector);
+	dir = FVector::VectorPlaneProject(pawn->right, FVector::UpVector);
 	dir.Normalize();
 
 	pawn->moveVector += dir * (speed * pawn->moveInput.Y);

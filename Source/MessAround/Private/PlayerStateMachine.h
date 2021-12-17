@@ -31,6 +31,11 @@ public:
 
 	bool doJump = false;
 
+	UPROPERTY(BlueprintReadWrite)
+	FVector forward;
+	UPROPERTY(BlueprintReadWrite)
+	FVector right;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
