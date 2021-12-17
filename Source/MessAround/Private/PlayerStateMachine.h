@@ -21,7 +21,7 @@ public:
 	/// <summary>
 	/// Stores the players moveVector in world space
 	/// </summary>
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	FVector moveVector;
 	/// <summary>
 	/// Is the character on the ground
