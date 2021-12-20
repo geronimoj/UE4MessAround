@@ -16,6 +16,8 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		TArray<FLevelStage> stages;
+
+	int currentStage = 0;
 public:
 	// Sets default values for this actor's properties
 	ALevelProgressor();
@@ -36,7 +38,7 @@ public:
 
 	FString GetStageName(int index);
 
-	int GetStageStepsVName();
+	int GetStageStepsVName(FString stageName);
 
 	int GetStageSteps(int stageIndex);
 
@@ -59,10 +61,10 @@ public:
 		void SubscribeToStageTickVName(FString stageName, FStageTick tickFunc);
 
 	UFUNCTION(BlueprintCallable)
-		void SubscribeToStepVIndex(int stageIndex, int stepIndex, FStepStateChange stepFunc);
+		void SubscribeToStepVIndex(int stageIndex, FStepStateChange stepFunc);
 
 	UFUNCTION(BlueprintCallable)
-		void SubscribeToStepVName(FString stageName, int stepIndex, FStepStateChange stepFunc);
+		void SubscribeToStepVName(FString stageName, FStepStateChange stepFunc);
 	//Unsubscribe stuff
 	UFUNCTION(BlueprintCallable)
 		void UnsubscribeToStageVIndex(int index, EStageType stage, FStageEnterExit func);
@@ -77,8 +79,8 @@ public:
 		void UnsubscribeToStageTickVName(FString stageName, FStageTick tickFunc);
 
 	UFUNCTION(BlueprintCallable)
-		void UnsubscribeToStepVIndex(int stageIndex, int stepIndex, FStepStateChange stepFunc);
+		void UnsubscribeToStepVIndex(int stageIndex, FStepStateChange stepFunc);
 
 	UFUNCTION(BlueprintCallable)
-		void UnsubscribeToStepVName(FString stageName, int stepIndex, FStepStateChange stepFunc);
+		void UnsubscribeToStepVName(FString stageName, FStepStateChange stepFunc);
 };

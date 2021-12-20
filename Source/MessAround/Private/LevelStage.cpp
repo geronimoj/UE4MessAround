@@ -32,8 +32,9 @@ void FLevelStage::SetCompletedStep(int step, bool completed)
 	//Set state
 	completedSteps[step] = completed;
 	//Execute the event
-	for (auto func : onStepChange)
-		func.Execute(completed, step);
+	int size = onStepChange.Num();
+	for (int i = 0; i < size; i++)
+		onStepChange[i].Execute(completed, step);
 }
 
 void FLevelStage::Initialize()
@@ -46,20 +47,23 @@ void FLevelStage::Initialize()
 
 void FLevelStage::Enter()
 {	//Execute the event
-	for (auto func : enter)
-		func.Execute();
+	int size = enter.Num();
+	for (int i = 0; i < size; i++)
+		enter[i].Execute();
 }
 
 void FLevelStage::Tick(float deltaTime)
 {	//Execute the event
-	for (auto func : tick)
-		func.Execute(deltaTime);
+	int size = tick.Num();
+	for (int i = 0; i < size; i++)
+		tick[i].Execute(deltaTime);
 }
 
 void FLevelStage::Exit()
 {	//Execute the event
-	for (auto func : exit)
-		func.Execute();
+	int size = exit.Num();
+	for (int i = 0; i < size; i++)
+		exit[i].Execute();
 }
 
 void FLevelStage::SubscribeToStage(EStageType stage, FStageEnterExit func)

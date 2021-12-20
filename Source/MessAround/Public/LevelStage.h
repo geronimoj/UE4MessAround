@@ -43,6 +43,8 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	int GetStepCount() { return steps; };
+
+	FString GetName() { return stageName; };
 	/// <summary>
 	/// Gets the completed state of the step
 	/// </summary>
