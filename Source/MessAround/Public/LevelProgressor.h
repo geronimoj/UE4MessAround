@@ -5,12 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "LevelStage.h"
-#include "LevelProgressorEnum.h"
+#include "ProgressorInclude.h"
 #include "LevelProgressor.generated.h"
-
-DECLARE_DYNAMIC_DELEGATE(FStageEnterExit);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FStageTick, float, DeltaTime);
-DECLARE_DYNAMIC_DELEGATE_TwoParams(FStepStateChange, bool, StepCompletedState, int32, Step);
 
 UCLASS()
 class MESSAROUND_API ALevelProgressor : public AActor

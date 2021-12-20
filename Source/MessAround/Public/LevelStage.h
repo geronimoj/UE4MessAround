@@ -3,14 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProgressorInclude.h"
 #include "LevelStage.generated.h"
+
+
+struct DelegateStorageEnterExit;
+
+struct DelegateStorageTick;
+
+struct DelegateStorageStateChange;
 /**
  * 
  */
 USTRUCT(BlueprintType)
 struct MESSAROUND_API FLevelStage
 {
-	GENERATED_BODY();
+	GENERATED_BODY()
 private:
 	/// <summary>
 	/// An array containing the steps that need to be completed
@@ -26,6 +34,12 @@ private:
 	/// </summary>
 	UPROPERTY(EditAnywhere)
 		int steps;
+	
+	
+	TArray<FStageEnterExit> enter;
+	TArray<FStageEnterExit> exit;
+	TArray<FStageTick> tick;
+	TArray<FStepStateChange> onStepChange;
 public:
 
 	FLevelStage();
@@ -51,4 +65,23 @@ public:
 	/// Initializes this stage
 	/// </summary>
 	void Initialize();
+};
+
+
+struct DelegateStorageEnterExit
+{
+public:
+	//FStageEnterExit func;
+};
+
+struct DelegateStorageTick
+{
+public:
+	//FStageTick func;
+};
+
+struct DelegateStorageStateChange
+{
+public:
+	//FStepStateChange func;
 };
