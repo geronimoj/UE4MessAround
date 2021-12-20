@@ -6,12 +6,6 @@
 #include "ProgressorInclude.h"
 #include "LevelStage.generated.h"
 
-
-struct DelegateStorageEnterExit;
-
-struct DelegateStorageTick;
-
-struct DelegateStorageStateChange;
 /**
  * 
  */
@@ -65,23 +59,4 @@ public:
 	/// Initializes this stage
 	/// </summary>
 	void Initialize();
-};
-
-
-struct DelegateStorageEnterExit
-{
-public:
-	//FStageEnterExit func;
-};
-
-struct DelegateStorageTick
-{
-public:
-	//FStageTick func;
-};
-
-struct DelegateStorageStateChange
-{
-public:
-	//FStepStateChange func;
 };
