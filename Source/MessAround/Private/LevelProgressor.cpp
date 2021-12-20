@@ -26,10 +26,6 @@ void ALevelProgressor::Tick(float DeltaTime)
 void ALevelProgressor::LevelStart_Implementation() {}
 void ALevelProgressor::LevelEnd_Implementation() {}
 
-void ALevelProgressor::OnDoThing_Implementation(int randomInt)
-{	//Default stuff
-}
-
 void ALevelProgressor::SubscribeToStageVIndex(int index, EStageType stage, FStageEnterExit func)
 {
 }
@@ -51,5 +47,29 @@ void ALevelProgressor::SubscribeToStepVIndex(int stageIndex, int stepIndex, FSte
 }
 
 void ALevelProgressor::SubscribeToStepVName(FString stageName, int stepIndex, FStepStateChange stepFunc)
+{
+}
+
+void ALevelProgressor::UnsubscribeToStageVIndex(int index, EStageType stage, FStageEnterExit func)
+{
+}
+
+void ALevelProgressor::UnsubscribeToStageVName(FString stageName, EStageType stage, FStageEnterExit func)
+{
+}
+
+void ALevelProgressor::UnsubscribeToStageTickVIndex(int index, FStageTick tickFunc)
+{
+}
+
+void ALevelProgressor::UnsubscribeToStageTickVName(FString stageName, FStageTick tickFunc)
+{
+}
+
+void ALevelProgressor::UnsubscribeToStepVIndex(int stageIndex, int stepIndex, FStepStateChange stepFunc)
+{
+}
+
+void ALevelProgressor::UnsubscribeToStepVName(FString stageName, int stepIndex, FStepStateChange stepFunc)
 {
 }
