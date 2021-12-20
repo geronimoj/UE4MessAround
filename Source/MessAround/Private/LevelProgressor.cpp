@@ -6,7 +6,7 @@
 // Sets default values
 ALevelProgressor::ALevelProgressor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	currentStage = 0;
@@ -84,6 +84,29 @@ int ALevelProgressor::GetStageIndex(FString stageName)
 		if (stages[i].GetName() == stageName)
 			return i;
 	return -1;
+}
+FString ALevelProgressor::GetStageName(int index)
+{	//Make sure index is valid
+	if (index < 0 || index >= stages.Num())
+		return FString();
+	//Return stage name
+	return stages[index].GetName();
+}
+int ALevelProgressor::GetStageStepsVName(FString stageName)
+{
+	int index = GetStageIndex(stageName);
+	//Make sure index is valid
+	if (index < 0)
+		return -1;
+	//Return the count
+	return stages[index].GetStepCount();
+}
+int ALevelProgressor::GetStageSteps(int stageIndex)
+{	//Make sure index is valid
+	if (stageIndex < 0 || stageIndex >= stages.Num())
+		return -1;
+	//Return count
+	return stages[stageIndex].GetStepCount();
 }
 void ALevelProgressor::LevelStart_Implementation() {}
 void ALevelProgressor::LevelEnd_Implementation() {}
