@@ -59,4 +59,30 @@ public:
 	/// Initializes this stage
 	/// </summary>
 	void Initialize();
+	/// <summary>
+	/// Calls the Enter event
+	/// </summary>
+	void Enter();
+	/// <summary>
+	/// Calls the tick event
+	/// </summary>
+	/// <param name="deltaTime"></param>
+	void Tick(float deltaTime);
+	/// <summary>
+	/// Calls the exit event
+	/// </summary>
+	void Exit();
+
+	//For subscribing to the enter and exit
+	void SubscribeToStage(EStageType stage, FStageEnterExit func);
+	//For unsubscribing to the enter and exit.
+	void UnsubscribeToStage(EStageType stage, FStageEnterExit func);
+
+	void SubscribeToTick(FStageTick func);
+	
+	void UnsubscribeToTick(FStageTick func);
+
+	void SubscribeToStepChange(FStepStateChange func);
+
+	void UnsubscribeToStepChange(FStepStateChange func);
 };

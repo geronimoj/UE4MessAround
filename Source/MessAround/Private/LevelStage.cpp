@@ -31,6 +31,9 @@ void FLevelStage::SetCompletedStep(int step, bool completed)
 		return;
 	//Set state
 	completedSteps[step] = completed;
+	//Execute the event
+	for (auto func : onStepChange)
+		func.Execute(completed, step);
 }
 
 void FLevelStage::Initialize()
@@ -39,4 +42,96 @@ void FLevelStage::Initialize()
 	//Make sure all values are false
 	for (int i = 0; i < steps; i++)
 		completedSteps[i] = false;
+}
+
+void FLevelStage::Enter()
+{	//Execute the event
+	for (auto func : enter)
+		func.Execute();
+}
+
+void FLevelStage::Tick(float deltaTime)
+{	//Execute the event
+	for (auto func : tick)
+		func.Execute(deltaTime);
+}
+
+void FLevelStage::Exit()
+{	//Execute the event
+	for (auto func : exit)
+		func.Execute();
+}
+
+void FLevelStage::SubscribeToStage(EStageType stage, FStageEnterExit func)
+{	//Make sure the function is still bound
+	if (!func.IsBound())
+		return;
+	
+	//Store as an enter or exit
+	switch (stage)
+	{
+	case EStageType::START:
+		enter.Add(func);
+		break;
+		//Otherwise store in exit
+	default:
+		exit.Add(func);
+		break;
+	}
+}
+
+void FLevelStage::UnsubscribeToStage(EStageType stage, FStageEnterExit func)
+{
+	//Attempt to remove
+	int removed;
+	switch (stage)
+	{
+	case EStageType::START:
+		removed = enter.Remove(func);
+		break;
+	default:
+		removed = exit.Remove(func);
+		break;
+	}
+	//Log an error if nothing was removed
+	if (removed <= 0)
+	{	//Used curly brackets because idk if this will cause errors in builds
+		UE_LOG(LogTemp, Error, TEXT("Failed to Unsubscribe from stage"));
+	}
+}
+
+void FLevelStage::SubscribeToTick(FStageTick func)
+{	//Make sure the function is still bound
+	if (!func.IsBound())
+		return;
+	//Store the function
+	tick.Add(func);
+}
+
+void FLevelStage::UnsubscribeToTick(FStageTick func)
+{	//Remove the function
+	int removed = tick.Remove(func);
+
+	if (removed <= 0)
+	{	//Used curly brackets because idk if this will cause errors in builds
+		UE_LOG(LogTemp, Error, TEXT("Failed to Unsubscribe from stage"));
+	}
+}
+
+void FLevelStage::SubscribeToStepChange(FStepStateChange func)
+{	//Make sure the function is still bound
+	if (!func.IsBound())
+		return;
+
+	onStepChange.Add(func);
+}
+
+void FLevelStage::UnsubscribeToStepChange(FStepStateChange func)
+{
+	int removed = onStepChange.Remove(func);
+
+	if (removed <= 0)
+	{	//Used curly brackets because idk if this will cause errors in builds
+		UE_LOG(LogTemp, Error, TEXT("Failed to Unsubscribe from stage"));
+	}
 }
