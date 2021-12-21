@@ -17,8 +17,10 @@ void ALevelProgressor::BeginPlay()
 {
 	Super::BeginPlay();
 	//Initialize the stages
-	for (FLevelStage stage : stages)
-		stage.Initialize();
+	//Not to self, don't use the for (auto variable : TArray) for structs, it does not pass by reference
+	int size = stages.Num();
+	for (int i = 0; i < size; i++)
+		stages[i].Initialize();
 
 	currentStage = -1;
 }
@@ -50,6 +52,8 @@ bool ALevelProgressor::CheckStageCompletion()
 		if (!current->GetCompletedStep(i))
 			//If not finished, return false
 			return false;
+
+	UE_LOG(LogTemp, Warning, TEXT("Stage completed!"));
 	//Otherwise all steps have passed
 	return true;
 }
@@ -107,6 +111,17 @@ int ALevelProgressor::GetStageSteps(int stageIndex)
 		return -1;
 	//Return count
 	return stages[stageIndex].GetStepCount();
+}
+
+void ALevelProgressor::SetCurrentStageStep(int stepIndex, bool completed)
+{	//Index catch
+	if (currentStage < 0 || currentStage >= stages.Num())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Current stage is invalid"));
+		return;
+	}
+
+	stages[currentStage].SetCompletedStep(stepIndex, completed);
 }
 
 void ALevelProgressor::Initialize()

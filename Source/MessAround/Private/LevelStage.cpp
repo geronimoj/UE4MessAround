@@ -6,7 +6,7 @@
 FLevelStage::FLevelStage()
 {	//Default to 1 step
 	steps = 1;
-	completedSteps = nullptr;
+	//completedSteps = nullptr;
 }
 
 FLevelStage::~FLevelStage()
@@ -28,7 +28,9 @@ bool FLevelStage::GetCompletedStep(int step)
 void FLevelStage::SetCompletedStep(int step, bool completed)
 {	//Make sure index is valid and array exists
 	if (completedSteps == nullptr || step < 0 || step >= steps)
+	{
 		return;
+	}
 	//Set state
 	completedSteps[step] = completed;
 	//Execute the event

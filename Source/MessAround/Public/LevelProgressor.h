@@ -43,6 +43,9 @@ public:
 	int GetStageSteps(int stageIndex);
 
 	UFUNCTION(BlueprintCallable)
+	void SetCurrentStageStep(int stepIndex, bool completed);
+
+	UFUNCTION(BlueprintCallable)
 	void Initialize();
 
 	UFUNCTION(BlueprintNativeEvent)
