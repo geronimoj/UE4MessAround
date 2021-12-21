@@ -46,8 +46,10 @@ void FLevelStage::Initialize()
 }
 
 void FLevelStage::Enter()
-{	//Execute the event
+{
 	int size = enter.Num();
+	UE_LOG(LogTemp, Warning, TEXT("Stage Enter: Enter functions to execute %d"), size);
+	//Execute the event
 	for (int i = 0; i < size; i++)
 		enter[i].Execute();
 }

@@ -9,7 +9,7 @@ ALevelProgressor::ALevelProgressor()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	currentStage = 0;
+	currentStage = -1;
 }
 
 // Called when the game starts or when spawned
@@ -19,8 +19,8 @@ void ALevelProgressor::BeginPlay()
 	//Initialize the stages
 	for (FLevelStage stage : stages)
 		stage.Initialize();
-	//Level has started
-	LevelStart();
+
+	currentStage = -1;
 }
 
 void ALevelProgressor::SwapStage()
@@ -108,6 +108,17 @@ int ALevelProgressor::GetStageSteps(int stageIndex)
 	//Return count
 	return stages[stageIndex].GetStepCount();
 }
+
+void ALevelProgressor::Initialize()
+{	//
+	currentStage = 0;
+	//Level has started
+	LevelStart();
+	//Enter the first stage
+	if (currentStage < stages.Num())
+		stages[currentStage].Enter();
+}
+
 void ALevelProgressor::LevelStart_Implementation() {}
 void ALevelProgressor::LevelEnd_Implementation() {}
 

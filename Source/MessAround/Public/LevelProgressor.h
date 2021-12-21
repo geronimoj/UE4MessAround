@@ -42,6 +42,9 @@ public:
 
 	int GetStageSteps(int stageIndex);
 
+	UFUNCTION(BlueprintCallable)
+	void Initialize();
+
 	UFUNCTION(BlueprintNativeEvent)
 		void LevelStart();
 
