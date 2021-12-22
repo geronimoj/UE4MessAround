@@ -6,7 +6,7 @@
 FLevelStage::FLevelStage()
 {	//Default to 1 step
 	steps = 1;
-	//completedSteps = nullptr;
+	completedSteps = nullptr;
 }
 
 FLevelStage::~FLevelStage()
