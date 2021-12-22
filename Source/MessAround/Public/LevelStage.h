@@ -29,10 +29,21 @@ private:
 	UPROPERTY(EditAnywhere)
 		int steps;
 	
-	
+	/// <summary>
+	/// Stores the functions to be called when entering the stage
+	/// </summary>
 	TArray<FStageEnterExit> enter;
+	/// <summary>
+	/// Stores the functions to be called when exiting the stage
+	/// </summary>
 	TArray<FStageEnterExit> exit;
+	/// <summary>
+	/// Stores the functions to be called while the stage is the currently active stage
+	/// </summary>
 	TArray<FStageTick> tick;
+	/// <summary>
+	/// Stores the functions to be called when a step in this stage changes.
+	/// </summary>
 	TArray<FStepStageChange> onStepChange;
 public:
 
@@ -43,7 +54,10 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	int GetStepCount() { return steps; };
-
+	/// <summary>
+	/// Returns the name of this stage
+	/// </summary>
+	/// <returns></returns>
 	FString GetName() { return stageName; };
 	/// <summary>
 	/// Gets the completed state of the step
@@ -74,17 +88,36 @@ public:
 	/// Calls the exit event
 	/// </summary>
 	void Exit();
-
-	//For subscribing to the enter and exit
+	/// <summary>
+	/// Subscribe a function to the enter or exit
+	/// </summary>
+	/// <param name="stage">Defines if it should subscribe to exit or enter</param>
+	/// <param name="func">The function to subscribe with</param>
 	void SubscribeToStage(EStageType stage, FStageEnterExit func);
-	//For unsubscribing to the enter and exit.
+	/// <summary>
+	/// Unsubscribe a function from the enter or exit
+	/// </summary>
+	/// <param name="stage">Defines if it should unsubscribe from exit or enter</param>
+	/// <param name="func">The function to unsubscribe</param>
 	void UnsubscribeToStage(EStageType stage, FStageEnterExit func);
-
+	/// <summary>
+	/// Subscribe a function to the stages tick
+	/// </summary>
+	/// <param name="func">The function to subscribe with</param>
 	void SubscribeToTick(FStageTick func);
-	
+	/// <summary>
+	/// Unsubscribe a function from the stages tick
+	/// </summary>
+	/// <param name="func">The function to unsubscribe with</param>
 	void UnsubscribeToTick(FStageTick func);
-
+	/// <summary>
+	/// Subscribe a function to the when a step changes state
+	/// </summary>
+	/// <param name="func">The function to subscribe with</param>
 	void SubscribeToStepChange(FStepStageChange func);
-
+	/// <summary>
+	/// Unsubscribe a function from the when a step changes state
+	/// </summary>
+	/// <param name="func">The function to unsubscribe with</param>
 	void UnsubscribeToStepChange(FStepStageChange func);
 };

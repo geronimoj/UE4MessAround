@@ -13,10 +13,14 @@ class MESSAROUND_API ALevelProgressor : public AActor
 {
 	GENERATED_BODY()
 private:
-
+	/// <summary>
+	/// The stages for this level
+	/// </summary>
 	UPROPERTY(EditAnywhere)
 		TArray<FLevelStage> stages;
-
+	/// <summary>
+	/// The current stage we are at
+	/// </summary>
 	int currentStage = 0;
 public:
 	// Sets default values for this actor's properties
@@ -27,30 +31,62 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	/// <summary>
+	/// Swaps to the next stage
+	/// </summary>
 	void SwapStage();
-
+	/// <summary>
+	/// Checks if the current stage has completed
+	/// </summary>
+	/// <returns>Returns true if the current stage has completed</returns>
 	bool CheckStageCompletion();
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	/// <summary>
+	/// Returns the index of a stage with the given name
+	/// </summary>
+	/// <param name="stageName">The name of the stage</param>
+	/// <returns>Returns -1 if no stage was found with the given name</returns>
 	int GetStageIndex(FString stageName);
-
+	/// <summary>
+	/// Returns the name of a stage at the given index
+	/// </summary>
+	/// <param name="index">The index of the stage</param>
+	/// <returns>Returns an empty string if the index is invalid</returns>
 	FString GetStageName(int index);
-
+	/// <summary>
+	/// Returns the number of steps in the stage given by the name
+	/// </summary>
+	/// <param name="stageName">The name of the stage to get the steps for</param>
+	/// <returns>Returns -1 if the stage could not be found</returns>
 	int GetStageStepsVName(FString stageName);
-
+	/// <summary>
+	/// Returns the number of steps in the stage at the given index
+	/// </summary>
+	/// <param name="stageIndex">The index of the stage to get for</param>
+	/// <returns>Returns -1 if the index was invalid</returns>
 	int GetStageSteps(int stageIndex);
-
+	/// <summary>
+	/// Sets the state of a step inside the current stage
+	/// </summary>
+	/// <param name="stepIndex">The index of the step</param>
+	/// <param name="stageName">The state to set it too</param>
 	UFUNCTION(BlueprintCallable)
 	void SetCurrentStageStep(int stepIndex, bool completed);
-
+	/// <summary>
+	/// Starts the LevelProgressor running
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void Initialize();
-
+	/// <summary>
+	/// Called before entering the first stage
+	/// </summary>
 	UFUNCTION(BlueprintNativeEvent)
 		void LevelStart();
-
+	/// <summary>
+	/// Called upon exiting the final stage
+	/// </summary>
 	UFUNCTION(BlueprintNativeEvent)
 		void LevelEnd();
 	//Subscribe
