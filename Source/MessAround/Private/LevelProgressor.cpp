@@ -167,7 +167,7 @@ void ALevelProgressor::SubscribeToStageTickVName(FString stageName, FStageTick t
 	SubscribeToStageTickVIndex(index, tickFunc);
 }
 
-void ALevelProgressor::SubscribeToStepVIndex(int stageIndex, FStepStateChange stepFunc)
+void ALevelProgressor::SubscribeToStepVIndex(int stageIndex, FStepStageChange stepFunc)
 {	//Invalid index catch
 	if (stageIndex < 0 || stageIndex >= stages.Num())
 		return;
@@ -175,7 +175,7 @@ void ALevelProgressor::SubscribeToStepVIndex(int stageIndex, FStepStateChange st
 	stages[stageIndex].SubscribeToStepChange(stepFunc);
 }
 
-void ALevelProgressor::SubscribeToStepVName(FString stageName, FStepStateChange stepFunc)
+void ALevelProgressor::SubscribeToStepVName(FString stageName, FStepStageChange stepFunc)
 {
 	int index = GetStageIndex(stageName);
 
@@ -212,7 +212,7 @@ void ALevelProgressor::UnsubscribeToStageTickVName(FString stageName, FStageTick
 	UnsubscribeToStageTickVIndex(index, tickFunc);
 }
 
-void ALevelProgressor::UnsubscribeToStepVIndex(int stageIndex, FStepStateChange stepFunc)
+void ALevelProgressor::UnsubscribeToStepVIndex(int stageIndex, FStepStageChange stepFunc)
 {//Invalid index catch
 	if (stageIndex < 0 || stageIndex >= stages.Num())
 		return;
@@ -220,7 +220,7 @@ void ALevelProgressor::UnsubscribeToStepVIndex(int stageIndex, FStepStateChange 
 	stages[stageIndex].UnsubscribeToStepChange(stepFunc);
 }
 
-void ALevelProgressor::UnsubscribeToStepVName(FString stageName, FStepStateChange stepFunc)
+void ALevelProgressor::UnsubscribeToStepVName(FString stageName, FStepStageChange stepFunc)
 {
 	int index = GetStageIndex(stageName);
 

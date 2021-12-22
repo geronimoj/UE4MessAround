@@ -67,10 +67,10 @@ public:
 		void SubscribeToStageTickVName(FString stageName, FStageTick tickFunc);
 
 	UFUNCTION(BlueprintCallable)
-		void SubscribeToStepVIndex(int stageIndex, FStepStateChange stepFunc);
+		void SubscribeToStepVIndex(int stageIndex, FStepStageChange stepFunc);
 
 	UFUNCTION(BlueprintCallable)
-		void SubscribeToStepVName(FString stageName, FStepStateChange stepFunc);
+		void SubscribeToStepVName(FString stageName, FStepStageChange stepFunc);
 	//Unsubscribe stuff
 	UFUNCTION(BlueprintCallable)
 		void UnsubscribeToStageVIndex(int index, EStageType stage, FStageEnterExit func);
@@ -85,8 +85,8 @@ public:
 		void UnsubscribeToStageTickVName(FString stageName, FStageTick tickFunc);
 
 	UFUNCTION(BlueprintCallable)
-		void UnsubscribeToStepVIndex(int stageIndex, FStepStateChange stepFunc);
+		void UnsubscribeToStepVIndex(int stageIndex, FStepStageChange stepFunc);
 
 	UFUNCTION(BlueprintCallable)
-		void UnsubscribeToStepVName(FString stageName, FStepStateChange stepFunc);
+		void UnsubscribeToStepVName(FString stageName, FStepStageChange stepFunc);
 };

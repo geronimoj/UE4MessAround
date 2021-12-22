@@ -16,4 +16,4 @@ enum EStageType {
 /// </summary>
 DECLARE_DYNAMIC_DELEGATE(FStageEnterExit);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FStageTick, float, DeltaTime);
-DECLARE_DYNAMIC_DELEGATE_TwoParams(FStepStateChange, bool, StepCompletedState, int32, Step);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FStepStageChange, bool, StepCompletedState, int32, Step);

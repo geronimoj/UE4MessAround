@@ -33,7 +33,7 @@ private:
 	TArray<FStageEnterExit> enter;
 	TArray<FStageEnterExit> exit;
 	TArray<FStageTick> tick;
-	TArray<FStepStateChange> onStepChange;
+	TArray<FStepStageChange> onStepChange;
 public:
 
 	FLevelStage();
@@ -84,7 +84,7 @@ public:
 	
 	void UnsubscribeToTick(FStageTick func);
 
-	void SubscribeToStepChange(FStepStateChange func);
+	void SubscribeToStepChange(FStepStageChange func);
 
-	void UnsubscribeToStepChange(FStepStateChange func);
+	void UnsubscribeToStepChange(FStepStageChange func);
 };

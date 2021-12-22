@@ -28,9 +28,7 @@ bool FLevelStage::GetCompletedStep(int step)
 void FLevelStage::SetCompletedStep(int step, bool completed)
 {	//Make sure index is valid and array exists
 	if (completedSteps == nullptr || step < 0 || step >= steps)
-	{
 		return;
-	}
 	//Set state
 	completedSteps[step] = completed;
 	//Execute the event
@@ -126,7 +124,7 @@ void FLevelStage::UnsubscribeToTick(FStageTick func)
 	}
 }
 
-void FLevelStage::SubscribeToStepChange(FStepStateChange func)
+void FLevelStage::SubscribeToStepChange(FStepStageChange func)
 {	//Make sure the function is still bound
 	if (!func.IsBound())
 		return;
@@ -134,7 +132,7 @@ void FLevelStage::SubscribeToStepChange(FStepStateChange func)
 	onStepChange.Add(func);
 }
 
-void FLevelStage::UnsubscribeToStepChange(FStepStateChange func)
+void FLevelStage::UnsubscribeToStepChange(FStepStageChange func)
 {
 	int removed = onStepChange.Remove(func);
 
