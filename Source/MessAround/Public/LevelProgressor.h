@@ -17,7 +17,7 @@ private:
 	/// The stages for this level
 	/// </summary>
 	UPROPERTY(EditAnywhere)
-		TArray<FLevelStage> stages;
+		TArray<ULevelStage*> stages;
 	/// <summary>
 	/// The current stage we are at
 	/// </summary>

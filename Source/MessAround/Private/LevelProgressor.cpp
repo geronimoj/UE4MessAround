@@ -20,7 +20,7 @@ void ALevelProgressor::BeginPlay()
 	//Not to self, don't use the for (auto variable : TArray) for structs, it does not pass by reference
 	int size = stages.Num();
 	for (int i = 0; i < size; i++)
-		stages[i].Initialize();
+		stages[i]->Initialize();
 
 	currentStage = -1;
 }
@@ -30,12 +30,12 @@ void ALevelProgressor::SwapStage()
 	if (currentStage < 0 || currentStage >= stages.Num())
 		return;
 	//Exit the current stage
-	stages[currentStage].Exit();
+	stages[currentStage]->Exit();
 	//Move to the next stage
 	currentStage++;
 	//If there is a next stage, enter it
 	if (currentStage < stages.Num())
-		stages[currentStage].Enter();
+		stages[currentStage]->Enter();
 	else//If there is no more stages, set current stage to -1 so we don't have to keep checking stages.Num
 		currentStage = -1;
 }
@@ -45,7 +45,7 @@ bool ALevelProgressor::CheckStageCompletion()
 	if (currentStage < 0 || currentStage >= stages.Num())
 		return true;
 	//Store temporary to reduce getting it
-	FLevelStage* current = &stages[currentStage];
+	ULevelStage* current = stages[currentStage];
 	int size = current->GetStepCount();
 	//Loop over steps and check if any have not finsihed
 	for (int i = 0; i < size; i++)
@@ -77,7 +77,7 @@ void ALevelProgressor::Tick(float DeltaTime)
 		}
 	}
 	//Do the stages tick
-	stages[currentStage].Tick(DeltaTime);
+	stages[currentStage]->Tick(DeltaTime);
 
 }
 int ALevelProgressor::GetStageIndex(FString stageName)
@@ -85,7 +85,7 @@ int ALevelProgressor::GetStageIndex(FString stageName)
 	int size = stages.Num();
 	for (int i = 0; i < size; i++)
 		//Compare name
-		if (stages[i].GetName() == stageName)
+		if (stages[i]->GetName() == stageName)
 			return i;
 	return -1;
 }
@@ -94,7 +94,7 @@ FString ALevelProgressor::GetStageName(int index)
 	if (index < 0 || index >= stages.Num())
 		return FString();
 	//Return stage name
-	return stages[index].GetName();
+	return stages[index]->GetName();
 }
 int ALevelProgressor::GetStageStepsVName(FString stageName)
 {
@@ -103,14 +103,14 @@ int ALevelProgressor::GetStageStepsVName(FString stageName)
 	if (index < 0)
 		return -1;
 	//Return the count
-	return stages[index].GetStepCount();
+	return stages[index]->GetStepCount();
 }
 int ALevelProgressor::GetStageSteps(int stageIndex)
 {	//Make sure index is valid
 	if (stageIndex < 0 || stageIndex >= stages.Num())
 		return -1;
 	//Return count
-	return stages[stageIndex].GetStepCount();
+	return stages[stageIndex]->GetStepCount();
 }
 
 void ALevelProgressor::SetCurrentStageStep(int stepIndex, bool completed)
@@ -121,7 +121,7 @@ void ALevelProgressor::SetCurrentStageStep(int stepIndex, bool completed)
 		return;
 	}
 
-	stages[currentStage].SetCompletedStep(stepIndex, completed);
+	stages[currentStage]->SetCompletedStep(stepIndex, completed);
 }
 
 void ALevelProgressor::Initialize()
@@ -131,7 +131,7 @@ void ALevelProgressor::Initialize()
 	LevelStart();
 	//Enter the first stage
 	if (currentStage < stages.Num())
-		stages[currentStage].Enter();
+		stages[currentStage]->Enter();
 }
 
 void ALevelProgressor::LevelStart_Implementation() {}
@@ -142,7 +142,7 @@ void ALevelProgressor::SubscribeToStageVIndex(int index, EStageType stage, FStag
 	if (index < 0 || index >= stages.Num())
 		return;
 	//Sub to stage
-	stages[index].SubscribeToStage(stage, func);
+	stages[index]->SubscribeToStage(stage, func);
 }
 
 void ALevelProgressor::SubscribeToStageVName(FString stageName, EStageType stage, FStageEnterExit func)
@@ -157,7 +157,7 @@ void ALevelProgressor::SubscribeToStageTickVIndex(int index, FStageTick tickFunc
 	if (index < 0 || index >= stages.Num())
 		return;
 	//Sub to stage
-	stages[index].SubscribeToTick(tickFunc);
+	stages[index]->SubscribeToTick(tickFunc);
 }
 
 void ALevelProgressor::SubscribeToStageTickVName(FString stageName, FStageTick tickFunc)
@@ -172,7 +172,7 @@ void ALevelProgressor::SubscribeToStepVIndex(int stageIndex, FStepStageChange st
 	if (stageIndex < 0 || stageIndex >= stages.Num())
 		return;
 	//Sub to stage
-	stages[stageIndex].SubscribeToStepChange(stepFunc);
+	stages[stageIndex]->SubscribeToStepChange(stepFunc);
 }
 
 void ALevelProgressor::SubscribeToStepVName(FString stageName, FStepStageChange stepFunc)
@@ -187,7 +187,7 @@ void ALevelProgressor::UnsubscribeToStageVIndex(int index, EStageType stage, FSt
 	if (index < 0 || index >= stages.Num())
 		return;
 	//Sub to stage
-	stages[index].UnsubscribeToStage(stage, func);
+	stages[index]->UnsubscribeToStage(stage, func);
 }
 
 void ALevelProgressor::UnsubscribeToStageVName(FString stageName, EStageType stage, FStageEnterExit func)
@@ -202,7 +202,7 @@ void ALevelProgressor::UnsubscribeToStageTickVIndex(int index, FStageTick tickFu
 	if (index < 0 || index >= stages.Num())
 		return;
 	//Sub to stage
-	stages[index].UnsubscribeToTick(tickFunc);
+	stages[index]->UnsubscribeToTick(tickFunc);
 }
 
 void ALevelProgressor::UnsubscribeToStageTickVName(FString stageName, FStageTick tickFunc)
@@ -217,7 +217,7 @@ void ALevelProgressor::UnsubscribeToStepVIndex(int stageIndex, FStepStageChange 
 	if (stageIndex < 0 || stageIndex >= stages.Num())
 		return;
 	//Sub to stage
-	stages[stageIndex].UnsubscribeToStepChange(stepFunc);
+	stages[stageIndex]->UnsubscribeToStepChange(stepFunc);
 }
 
 void ALevelProgressor::UnsubscribeToStepVName(FString stageName, FStepStageChange stepFunc)

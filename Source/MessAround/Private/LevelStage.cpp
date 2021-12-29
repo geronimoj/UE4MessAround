@@ -3,13 +3,13 @@
 
 #include "LevelStage.h"
 
-FLevelStage::FLevelStage()
+ULevelStage::ULevelStage()
 {	//Default to 1 step
 	steps = 1;
 	completedSteps = nullptr;
 }
 
-FLevelStage::~FLevelStage()
+ULevelStage::~ULevelStage()
 {	//If the array was initialized, clean it up
 	if (completedSteps != nullptr)
 		delete[] completedSteps;
@@ -17,7 +17,7 @@ FLevelStage::~FLevelStage()
 	completedSteps = nullptr;
 }
 
-bool FLevelStage::GetCompletedStep(int step)
+bool ULevelStage::GetCompletedStep(int step)
 {	//Make sure index is valid and array exists
 	if (completedSteps == nullptr || step < 0 || step >= steps)
 		return false;
@@ -25,7 +25,7 @@ bool FLevelStage::GetCompletedStep(int step)
 	return completedSteps[step];
 }
 
-void FLevelStage::SetCompletedStep(int step, bool completed)
+void ULevelStage::SetCompletedStep(int step, bool completed)
 {	//Make sure index is valid and array exists
 	if (completedSteps == nullptr || step < 0 || step >= steps)
 		return;
@@ -37,7 +37,7 @@ void FLevelStage::SetCompletedStep(int step, bool completed)
 		onStepChange[i].Execute(completed, step);
 }
 
-void FLevelStage::Initialize()
+void ULevelStage::Initialize()
 {	//Create the array
 	completedSteps = new bool[steps];
 	//Make sure all values are false
@@ -45,7 +45,7 @@ void FLevelStage::Initialize()
 		completedSteps[i] = false;
 }
 
-void FLevelStage::Enter()
+void ULevelStage::Enter()
 {
 	int size = enter.Num();
 	UE_LOG(LogTemp, Warning, TEXT("Stage Enter: Enter functions to execute %d"), size);
@@ -54,21 +54,21 @@ void FLevelStage::Enter()
 		enter[i].Execute();
 }
 
-void FLevelStage::Tick(float deltaTime)
+void ULevelStage::Tick(float deltaTime)
 {	//Execute the event
 	int size = tick.Num();
 	for (int i = 0; i < size; i++)
 		tick[i].Execute(deltaTime);
 }
 
-void FLevelStage::Exit()
+void ULevelStage::Exit()
 {	//Execute the event
 	int size = exit.Num();
 	for (int i = 0; i < size; i++)
 		exit[i].Execute();
 }
 
-void FLevelStage::SubscribeToStage(EStageType stage, FStageEnterExit func)
+void ULevelStage::SubscribeToStage(EStageType stage, FStageEnterExit func)
 {	//Make sure the function is still bound
 	if (!func.IsBound())
 		return;
@@ -86,7 +86,7 @@ void FLevelStage::SubscribeToStage(EStageType stage, FStageEnterExit func)
 	}
 }
 
-void FLevelStage::UnsubscribeToStage(EStageType stage, FStageEnterExit func)
+void ULevelStage::UnsubscribeToStage(EStageType stage, FStageEnterExit func)
 {
 	//Attempt to remove
 	int removed;
@@ -106,7 +106,7 @@ void FLevelStage::UnsubscribeToStage(EStageType stage, FStageEnterExit func)
 	}
 }
 
-void FLevelStage::SubscribeToTick(FStageTick func)
+void ULevelStage::SubscribeToTick(FStageTick func)
 {	//Make sure the function is still bound
 	if (!func.IsBound())
 		return;
@@ -114,7 +114,7 @@ void FLevelStage::SubscribeToTick(FStageTick func)
 	tick.Add(func);
 }
 
-void FLevelStage::UnsubscribeToTick(FStageTick func)
+void ULevelStage::UnsubscribeToTick(FStageTick func)
 {	//Remove the function
 	int removed = tick.Remove(func);
 
@@ -124,7 +124,7 @@ void FLevelStage::UnsubscribeToTick(FStageTick func)
 	}
 }
 
-void FLevelStage::SubscribeToStepChange(FStepStageChange func)
+void ULevelStage::SubscribeToStepChange(FStepStageChange func)
 {	//Make sure the function is still bound
 	if (!func.IsBound())
 		return;
@@ -132,7 +132,7 @@ void FLevelStage::SubscribeToStepChange(FStepStageChange func)
 	onStepChange.Add(func);
 }
 
-void FLevelStage::UnsubscribeToStepChange(FStepStageChange func)
+void ULevelStage::UnsubscribeToStepChange(FStepStageChange func)
 {
 	int removed = onStepChange.Remove(func);
 

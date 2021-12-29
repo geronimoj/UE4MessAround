@@ -9,8 +9,8 @@
 /**
  * 
  */
-USTRUCT(BlueprintType)
-struct MESSAROUND_API FLevelStage
+UCLASS()
+class MESSAROUND_API ULevelStage : public UObject
 {
 	GENERATED_BODY()
 private:
@@ -45,10 +45,12 @@ private:
 	/// Stores the functions to be called when a step in this stage changes.
 	/// </summary>
 	TArray<FStepStageChange> onStepChange;
+
+	TArray<ULevelStage*> nextStages;
 public:
 
-	FLevelStage();
-	~FLevelStage();
+	ULevelStage();
+	~ULevelStage();
 	/// <summary>
 	/// Gets the number of steps
 	/// </summary>
