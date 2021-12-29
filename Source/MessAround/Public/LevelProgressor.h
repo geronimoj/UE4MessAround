@@ -22,6 +22,11 @@ private:
 	/// The current stage we are at
 	/// </summary>
 	int currentStage = 0;
+	/// <summary>
+	/// Pointer to the current stage
+	/// </summary>
+	UPROPERTY(EditAnywhere)
+	ULevelStage* theCurrentStage;
 public:
 	// Sets default values for this actor's properties
 	ALevelProgressor();
@@ -67,6 +72,9 @@ public:
 	/// <param name="stageIndex">The index of the stage to get for</param>
 	/// <returns>Returns -1 if the index was invalid</returns>
 	int GetStageSteps(int stageIndex);
+
+	UFUNCTION(BlueprintCallable)
+	ULevelStage* GetCurrentStage();
 	/// <summary>
 	/// Sets the state of a step inside the current stage
 	/// </summary>

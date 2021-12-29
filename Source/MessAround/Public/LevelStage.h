@@ -7,7 +7,8 @@
 #include "LevelStage.generated.h"
 
 /**
- * 
+ * To Do: (Un)Subscribe for FNextStage
+ * AddExistingStage
  */
 UCLASS()
 class MESSAROUND_API ULevelStage : public UObject
@@ -56,7 +57,13 @@ private:
 public:
 
 	ULevelStage();
+	ULevelStage(FString name, int stepCount);
 	~ULevelStage();
+
+private:
+	void SetParams(FString name, int stepCount);
+
+public:
 	/// <summary>
 	/// Gets the number of steps
 	/// </summary>
@@ -97,10 +104,21 @@ public:
 	/// </summary>
 	void Exit();
 	/// <summary>
-	/// Called after exiting the stage to determine which stage to move into next. Defaults to returning 0
+	/// Gets the next stage
 	/// </summary>
-	/// <returns>Returns the index of the next stage</returns>
-	int GetNextStage();
+	/// <returns>Pointer to the next stage</returns>
+	ULevelStage* GetNextStage();
+	/// <summary>
+	/// Adds a stage to be the next possible stage
+	/// </summary>
+	/// <returns>Returns the new stage</returns>
+	UFUNCTION(BlueprintCallable)
+	ULevelStage* AddNextStage(FString newStageName, int newStageSteps);
+	/// <summary>
+	/// Subscribes to the next stage
+	/// </summary>
+	/// <param name="func"></param>
+	void SubscribeToNextStageCheck(FNextStage func);
 	/// <summary>
 	/// Subscribe a function to the enter or exit
 	/// </summary>
@@ -133,4 +151,11 @@ public:
 	/// </summary>
 	/// <param name="func">The function to unsubscribe with</param>
 	void UnsubscribeToStepChange(FStepStageChange func);
+
+	private:
+		/// <summary>
+		/// Called after exiting the stage to determine which stage to move into next. Defaults to returning 0
+		/// </summary>
+		/// <returns>Returns the index of the next stage</returns>
+		int GetNextStageIndex();
 };

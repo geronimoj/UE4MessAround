@@ -10,6 +10,7 @@ ALevelProgressor::ALevelProgressor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	currentStage = -1;
+	theCurrentStage = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -111,6 +112,14 @@ int ALevelProgressor::GetStageSteps(int stageIndex)
 		return -1;
 	//Return count
 	return stages[stageIndex]->GetStepCount();
+}
+
+ULevelStage* ALevelProgressor::GetCurrentStage()
+{	//If the current stage is nullptr, create one
+	if (theCurrentStage == nullptr)
+		theCurrentStage = NewObject<ULevelStage>();
+	//Get the current stage
+	return theCurrentStage;
 }
 
 void ALevelProgressor::SetCurrentStageStep(int stepIndex, bool completed)
