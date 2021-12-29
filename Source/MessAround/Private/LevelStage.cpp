@@ -68,6 +68,19 @@ void ULevelStage::Exit()
 		exit[i].Execute();
 }
 
+int ULevelStage::GetNextStage()
+{	//Make sure is bound
+	if (getNextStage.IsBound())
+		//Return value
+		return getNextStage.Execute(nextStages.Num());
+	else if (nextStages.Num() > 1)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Stage has multiple next stages but no FNextStage function has been assigned"))
+	}
+	//Otherwise default to 0
+	return 0;
+}
+
 void ULevelStage::SubscribeToStage(EStageType stage, FStageEnterExit func)
 {	//Make sure the function is still bound
 	if (!func.IsBound())

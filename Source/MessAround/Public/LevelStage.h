@@ -45,7 +45,13 @@ private:
 	/// Stores the functions to be called when a step in this stage changes.
 	/// </summary>
 	TArray<FStepStageChange> onStepChange;
-
+	/// <summary>
+	/// Called once a stage is completed to determine which stage should be completed next
+	/// </summary>
+	FNextStage getNextStage;
+	/// <summary>
+	/// The options for the next stage
+	/// </summary>
 	TArray<ULevelStage*> nextStages;
 public:
 
@@ -90,6 +96,11 @@ public:
 	/// Calls the exit event
 	/// </summary>
 	void Exit();
+	/// <summary>
+	/// Called after exiting the stage to determine which stage to move into next. Defaults to returning 0
+	/// </summary>
+	/// <returns>Returns the index of the next stage</returns>
+	int GetNextStage();
 	/// <summary>
 	/// Subscribe a function to the enter or exit
 	/// </summary>
