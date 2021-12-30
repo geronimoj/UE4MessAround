@@ -118,6 +118,16 @@ ULevelStage* ULevelStage::AddNextStage(FString newStageName, int newStageSteps)
 	return stage;
 }
 
+void ULevelStage::AddExistingNextStage(ULevelStage* stage)
+{	//Make sure pointer is valid
+	if (stage == nullptr)
+		return;
+	//Store pointer
+	nextStages.Add(stage);
+	//Return the added stage
+	return;
+}
+
 void ULevelStage::SubscribeToNextStageCheck(FNextStage func)
 {	//If it is not bound, bind it
 	if (!getNextStage.IsBound())

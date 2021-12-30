@@ -7,7 +7,10 @@
 #include "LevelStage.h"
 #include "ProgressorInclude.h"
 #include "LevelProgressor.generated.h"
-
+/*
+ * To Do: Store all LevelStages and don't delete them until destructor is called.
+ * Swap to new progression system
+ */
 UCLASS()
 class MESSAROUND_API ALevelProgressor : public AActor
 {
@@ -27,6 +30,10 @@ private:
 	/// </summary>
 	UPROPERTY(EditAnywhere)
 	ULevelStage* theCurrentStage;
+	/// <summary>
+	/// The initial stage
+	/// </summary>
+	ULevelStage* initial;
 public:
 	// Sets default values for this actor's properties
 	ALevelProgressor();
@@ -45,6 +52,12 @@ private:
 	/// </summary>
 	/// <returns>Returns true if the current stage has completed</returns>
 	bool CheckStageCompletion();
+	/// <summary>
+	/// Uses a recursive search to find the stage with the given name
+	/// </summary>
+	/// <param name="stageName">The name of the stage to find</param>
+	/// <returns>Returns a pointer to the given stage</returns>
+	ULevelStage* FindStage(FString stageName);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

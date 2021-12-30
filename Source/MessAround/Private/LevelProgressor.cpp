@@ -11,6 +11,7 @@ ALevelProgressor::ALevelProgressor()
 
 	currentStage = -1;
 	theCurrentStage = nullptr;
+	initial = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -57,6 +58,62 @@ bool ALevelProgressor::CheckStageCompletion()
 	UE_LOG(LogTemp, Warning, TEXT("Stage completed!"));
 	//Otherwise all steps have passed
 	return true;
+}
+
+ULevelStage* ALevelProgressor::FindStage(FString stageName)
+{	//If the level progressor has not been setup, return nullptr
+	if (initial == nullptr)
+		return nullptr;
+	//If initial is what is being searched for, use initial
+	if (initial->GetName() == stageName)
+		return initial;
+	//The level stage we are starting the search from
+	TArray<ULevelStage*>* closed = new TArray<ULevelStage*>();
+	TArray<ULevelStage*>* open = new TArray<ULevelStage*>();
+	//Initialize temporary storage data
+	TArray<ULevelStage*>* toCheck = nullptr;
+	ULevelStage* cur = nullptr;
+	//Prepare the search
+	open->Add(initial);
+	//While the open list contains data, search
+	//We will either eventually run out of stuff to search through
+	//Or we will find our target
+	while (open->Num() > 0)
+	{	//Get the first item
+		cur = (*open)[0];
+		//Take it out of open and into closed
+		open->RemoveAt(0);
+		closed->Add(cur);
+
+		toCheck = cur->GetNextStages();
+		//Check through toCheck for the stage
+		for (ULevelStage* stage : *toCheck)
+		{	//Check the name
+			if (stage->GetName() == stageName)
+			{	//Clear references to make sure data is not deleted somehow.
+				closed->Empty();
+				open->Empty();
+				//Release the memory we created
+				delete closed;
+				delete open;
+				//Return the stage
+				return stage;
+			}
+			//Make sure that stage has not already been checked or is already in open
+			//Just in case of some very fancy progress setup
+			else if (!closed->Contains(stage) && !open->Contains(stage))
+				//If its not in open or closed, add it to open as it needs to be checked
+				open->Add(stage);
+		}
+	}
+	//Clear references to make sure data is not deleted somehow.
+	closed->Empty();
+	open->Empty();
+	//Release the memory we created
+	delete closed;
+	delete open;
+	//We could not find the target
+	return nullptr;
 }
 
 // Called every frame
@@ -117,7 +174,10 @@ int ALevelProgressor::GetStageSteps(int stageIndex)
 ULevelStage* ALevelProgressor::GetCurrentStage()
 {	//If the current stage is nullptr, create one
 	if (theCurrentStage == nullptr)
+	{
 		theCurrentStage = NewObject<ULevelStage>();
+		initial = theCurrentStage;
+	}
 	//Get the current stage
 	return theCurrentStage;
 }
@@ -138,6 +198,12 @@ void ALevelProgressor::Initialize()
 	currentStage = 0;
 	//Level has started
 	LevelStart();
+	//If the current stage is nullptr, create one
+	if (theCurrentStage == nullptr)
+	{
+		theCurrentStage = NewObject<ULevelStage>();
+		initial = theCurrentStage;
+	}
 	//Enter the first stage
 	if (currentStage < stages.Num())
 		stages[currentStage]->Enter();

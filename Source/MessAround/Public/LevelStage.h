@@ -7,8 +7,7 @@
 #include "LevelStage.generated.h"
 
 /**
- * To Do: (Un)Subscribe for FNextStage
- * AddExistingStage
+ * To Do: UnSubscribe for FNextStage
  */
 UCLASS()
 class MESSAROUND_API ULevelStage : public UObject
@@ -75,6 +74,11 @@ public:
 	/// <returns></returns>
 	FString GetName() { return stageName; };
 	/// <summary>
+	/// Gets the next stages
+	/// </summary>
+	/// <returns></returns>
+	TArray<ULevelStage*>* GetNextStages() { return &nextStages; };
+	/// <summary>
 	/// Gets the completed state of the step
 	/// </summary>
 	/// <param name="step">The step to get for</param>
@@ -114,6 +118,11 @@ public:
 	/// <returns>Returns the new stage</returns>
 	UFUNCTION(BlueprintCallable)
 	ULevelStage* AddNextStage(FString newStageName, int newStageSteps);
+	/// <summary>
+	/// Adds a preexxisting stage to be the next possible stage
+	/// </summary>
+	/// <param name="stage">The stage you wish to mark as a next stage</param>
+	void AddExistingNextStage(ULevelStage* stage);
 	/// <summary>
 	/// Subscribes to the next stage
 	/// </summary>
