@@ -37,6 +37,7 @@ private:
 public:
 	// Sets default values for this actor's properties
 	ALevelProgressor();
+	~ALevelProgressor();
 
 protected:
 	// Called when the game starts or when spawned

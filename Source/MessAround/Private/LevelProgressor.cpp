@@ -14,6 +14,13 @@ ALevelProgressor::ALevelProgressor()
 	initial = nullptr;
 }
 
+ALevelProgressor::~ALevelProgressor()
+{	//To my understanding, UE4 manages UObjects and I shouldn't do anything.
+	initial = nullptr;
+	theCurrentStage = nullptr;
+	currentStage = 0;
+}
+
 // Called when the game starts or when spawned
 void ALevelProgressor::BeginPlay()
 {
