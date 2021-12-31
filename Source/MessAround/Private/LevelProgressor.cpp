@@ -8,17 +8,15 @@ ALevelProgressor::ALevelProgressor()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	currentStage = -1;
-	theCurrentStage = nullptr;
-	initial = nullptr;
+	//Instance the current stage
+	theCurrentStage = NewObject<ULevelStage>();
+	initial = theCurrentStage;
 }
 
 ALevelProgressor::~ALevelProgressor()
 {	//To my understanding, UE4 manages UObjects and I shouldn't do anything.
 	initial = nullptr;
 	theCurrentStage = nullptr;
-	currentStage = 0;
 }
 
 // Called when the game starts or when spawned
@@ -27,38 +25,39 @@ void ALevelProgressor::BeginPlay()
 	Super::BeginPlay();
 	//Initialize the stages
 	//Not to self, don't use the for (auto variable : TArray) for structs, it does not pass by reference
-	int size = stages.Num();
-	for (int i = 0; i < size; i++)
-		stages[i]->Initialize();
-
-	currentStage = -1;
+	//Null catch
+	if (theCurrentStage == nullptr)
+	{	
+		UE_LOG(LogTemp, Warning, TEXT("Initial Stage was not initialized somehow"))
+		theCurrentStage = NewObject<ULevelStage>();
+		initial = theCurrentStage;
+	}
+	theCurrentStage->Initialize();
 }
 
 void ALevelProgressor::SwapStage()
-{	//Make sure index is valid
-	if (currentStage < 0 || currentStage >= stages.Num())
+{	//Null catch
+	if (theCurrentStage == nullptr)
 		return;
 	//Exit the current stage
-	stages[currentStage]->Exit();
+	theCurrentStage->Exit();
 	//Move to the next stage
-	currentStage++;
+	theCurrentStage = theCurrentStage->GetNextStage();
 	//If there is a next stage, enter it
-	if (currentStage < stages.Num())
-		stages[currentStage]->Enter();
-	else//If there is no more stages, set current stage to -1 so we don't have to keep checking stages.Num
-		currentStage = -1;
+	if (theCurrentStage != nullptr)
+		theCurrentStage->Enter();
+	//Otherwise there are no more stages
 }
 
 bool ALevelProgressor::CheckStageCompletion()
-{	//Make sure index is valid
-	if (currentStage < 0 || currentStage >= stages.Num())
+{	//Null catch
+	if (theCurrentStage == nullptr)
 		return true;
-	//Store temporary to reduce getting it
-	ULevelStage* current = stages[currentStage];
-	int size = current->GetStepCount();
+	//Get the step count
+	int size = theCurrentStage->GetStepCount();
 	//Loop over steps and check if any have not finsihed
 	for (int i = 0; i < size; i++)
-		if (!current->GetCompletedStep(i))
+		if (!theCurrentStage->GetCompletedStep(i))
 			//If not finished, return false
 			return false;
 
@@ -127,55 +126,55 @@ ULevelStage* ALevelProgressor::FindStage(FString stageName)
 void ALevelProgressor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//Make sure index is valid
-	if (currentStage < 0 || currentStage >= stages.Num())
+	//Null catch
+	if (theCurrentStage == nullptr)
 		return;
 	//Check if the stage has been completed
 	if (CheckStageCompletion())
 	{	//If its done, move to the next stage
 		SwapStage();
-		//If the index has been invalidated, finish the level
-		if (currentStage < 0)
+		//If theCurrentStage is null, end the level
+		if (theCurrentStage == nullptr)
 		{	//Call the end code
 			LevelEnd();
 			return;
 		}
 	}
 	//Do the stages tick
-	stages[currentStage]->Tick(DeltaTime);
+	theCurrentStage->Tick(DeltaTime);
 
 }
-int ALevelProgressor::GetStageIndex(FString stageName)
-{
-	int size = stages.Num();
-	for (int i = 0; i < size; i++)
-		//Compare name
-		if (stages[i]->GetName() == stageName)
-			return i;
-	return -1;
-}
-FString ALevelProgressor::GetStageName(int index)
-{	//Make sure index is valid
-	if (index < 0 || index >= stages.Num())
-		return FString();
-	//Return stage name
-	return stages[index]->GetName();
-}
-int ALevelProgressor::GetStageStepsVName(FString stageName)
-{
-	int index = GetStageIndex(stageName);
+
+int ALevelProgressor::GetStageSteps(FString stageName)
+{	//Attemp to find the given stage
+	ULevelStage* temp = FindStage(stageName);
 	//Make sure index is valid
-	if (index < 0)
+	if (temp == nullptr)
+		UE_LOG(LogTemp, Warning, TEXT("Could not find stage with name %s"), *stageName)
 		return -1;
 	//Return the count
-	return stages[index]->GetStepCount();
+	return temp->GetStepCount();
 }
-int ALevelProgressor::GetStageSteps(int stageIndex)
-{	//Make sure index is valid
-	if (stageIndex < 0 || stageIndex >= stages.Num())
-		return -1;
-	//Return count
-	return stages[stageIndex]->GetStepCount();
+
+bool ALevelProgressor::SetCurrentStage(ULevelStage* newStage)
+{	//Null catch
+	if (newStage == nullptr)
+		UE_LOG(LogTemp, Error, TEXT("Attempted to enter nullpr stage"))
+		return false;
+	//If the current stage is the new stage, don't enter it because we are already in it.
+	if (theCurrentStage == newStage)
+	{	//Log a warning but let it go through. Its not like it breaks anything.
+		UE_LOG(LogTemp, Warning, TEXT("Attempted to enter the current stage"))
+	}
+	//Exit the current stage if not null
+	if (theCurrentStage != nullptr)
+		theCurrentStage->Exit();
+
+	theCurrentStage = newStage;
+	//Enter the new stage
+	newStage->Enter();
+
+	return true;
 }
 
 ULevelStage* ALevelProgressor::GetCurrentStage()
@@ -191,120 +190,104 @@ ULevelStage* ALevelProgressor::GetCurrentStage()
 
 void ALevelProgressor::SetCurrentStageStep(int stepIndex, bool completed)
 {	//Index catch
-	if (currentStage < 0 || currentStage >= stages.Num())
+	if (theCurrentStage == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Current stage is invalid"));
 		return;
 	}
 
-	stages[currentStage]->SetCompletedStep(stepIndex, completed);
+	theCurrentStage->SetCompletedStep(stepIndex, completed);
 }
 
 void ALevelProgressor::Initialize()
-{	//
-	currentStage = 0;
-	//Level has started
+{	//Level has started
 	LevelStart();
 	//If the current stage is nullptr, create one
 	if (theCurrentStage == nullptr)
-	{
+	{	//Make sure current stage is initialized
 		theCurrentStage = NewObject<ULevelStage>();
 		initial = theCurrentStage;
 	}
 	//Enter the first stage
-	if (currentStage < stages.Num())
-		stages[currentStage]->Enter();
+	if (theCurrentStage != nullptr)
+		theCurrentStage->Enter();
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("The initial stage has not been initialized"))
+	}
 }
 
 void ALevelProgressor::LevelStart_Implementation() {}
 void ALevelProgressor::LevelEnd_Implementation() {}
 
-void ALevelProgressor::SubscribeToStageVIndex(int index, EStageType stage, FStageEnterExit func)
-{	//Invalid index catch
-	if (index < 0 || index >= stages.Num())
-		return;
-	//Sub to stage
-	stages[index]->SubscribeToStage(stage, func);
-}
-
-void ALevelProgressor::SubscribeToStageVName(FString stageName, EStageType stage, FStageEnterExit func)
+void ALevelProgressor::SubscribeToStage(FString stageName, EStageType stage, FStageEnterExit func)
 {
-	int index = GetStageIndex(stageName);
+	ULevelStage* temp = FindStage(stageName);
 
-	SubscribeToStageVIndex(index, stage, func);
+	if (temp != nullptr)
+		temp->SubscribeToStage(stage, func);
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not find stage with name %s"), *stageName)
+	}
 }
 
-void ALevelProgressor::SubscribeToStageTickVIndex(int index, FStageTick tickFunc)
-{	//Invalid index catch
-	if (index < 0 || index >= stages.Num())
-		return;
-	//Sub to stage
-	stages[index]->SubscribeToTick(tickFunc);
-}
-
-void ALevelProgressor::SubscribeToStageTickVName(FString stageName, FStageTick tickFunc)
+void ALevelProgressor::SubscribeToStageTick(FString stageName, FStageTick tickFunc)
 {
-	int index = GetStageIndex(stageName);
+	ULevelStage* temp = FindStage(stageName);
 
-	SubscribeToStageTickVIndex(index, tickFunc);
+	if (temp != nullptr)
+		temp->SubscribeToTick(tickFunc);
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not find stage with name %s"), *stageName)
+	}
 }
 
-void ALevelProgressor::SubscribeToStepVIndex(int stageIndex, FStepStageChange stepFunc)
-{	//Invalid index catch
-	if (stageIndex < 0 || stageIndex >= stages.Num())
-		return;
-	//Sub to stage
-	stages[stageIndex]->SubscribeToStepChange(stepFunc);
-}
-
-void ALevelProgressor::SubscribeToStepVName(FString stageName, FStepStageChange stepFunc)
+void ALevelProgressor::SubscribeToStep(FString stageName, FStepStageChange stepFunc)
 {
-	int index = GetStageIndex(stageName);
+	ULevelStage* temp = FindStage(stageName);
 
-	SubscribeToStepVIndex(index, stepFunc);
+	if (temp != nullptr)
+		temp->SubscribeToStepChange(stepFunc);
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not find stage with name %s"), *stageName)
+	}
 }
 
-void ALevelProgressor::UnsubscribeToStageVIndex(int index, EStageType stage, FStageEnterExit func)
-{	//Invalid index catch
-	if (index < 0 || index >= stages.Num())
-		return;
-	//Sub to stage
-	stages[index]->UnsubscribeToStage(stage, func);
-}
-
-void ALevelProgressor::UnsubscribeToStageVName(FString stageName, EStageType stage, FStageEnterExit func)
+void ALevelProgressor::UnsubscribeToStage(FString stageName, EStageType stage, FStageEnterExit func)
 {
-	int index = GetStageIndex(stageName);
+	ULevelStage* temp = FindStage(stageName);
 
-	UnsubscribeToStageVIndex(index, stage, func);
+	if (temp != nullptr)
+		temp->UnsubscribeToStage(stage, func);
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not find stage with name %s"), *stageName)
+	}
 }
 
-void ALevelProgressor::UnsubscribeToStageTickVIndex(int index, FStageTick tickFunc)
-{//Invalid index catch
-	if (index < 0 || index >= stages.Num())
-		return;
-	//Sub to stage
-	stages[index]->UnsubscribeToTick(tickFunc);
-}
-
-void ALevelProgressor::UnsubscribeToStageTickVName(FString stageName, FStageTick tickFunc)
+void ALevelProgressor::UnsubscribeToStageTick(FString stageName, FStageTick tickFunc)
 {
-	int index = GetStageIndex(stageName);
+	ULevelStage* temp = FindStage(stageName);
 
-	UnsubscribeToStageTickVIndex(index, tickFunc);
+	if (temp != nullptr)
+		temp->UnsubscribeToTick(tickFunc);
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not find stage with name %s"), *stageName)
+	}
 }
 
-void ALevelProgressor::UnsubscribeToStepVIndex(int stageIndex, FStepStageChange stepFunc)
-{//Invalid index catch
-	if (stageIndex < 0 || stageIndex >= stages.Num())
-		return;
-	//Sub to stage
-	stages[stageIndex]->UnsubscribeToStepChange(stepFunc);
-}
-
-void ALevelProgressor::UnsubscribeToStepVName(FString stageName, FStepStageChange stepFunc)
+void ALevelProgressor::UnsubscribeToStep(FString stageName, FStepStageChange stepFunc)
 {
-	int index = GetStageIndex(stageName);
+	ULevelStage* temp = FindStage(stageName);
 
-	UnsubscribeToStepVIndex(index, stepFunc);
+	if (temp != nullptr)
+		temp->UnsubscribeToStepChange(stepFunc);
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not find stage with name %s"), *stageName)
+	}
 }

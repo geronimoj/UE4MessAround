@@ -28,7 +28,6 @@ private:
 	/// </summary>
 	UPROPERTY(EditAnywhere)
 		int steps;
-	
 	/// <summary>
 	/// Stores the functions to be called when entering the stage
 	/// </summary>

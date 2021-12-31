@@ -104,6 +104,9 @@ ULevelStage* ULevelStage::GetNextStage()
 		return nullptr;
 	//Get the stage index
 	int stage = GetNextStageIndex();
+	//Index catch
+	if (stage < 0 || stage >= nextStages.Num())
+		return nullptr;
 	//Return the new stage
 	return nextStages[stage];
 }

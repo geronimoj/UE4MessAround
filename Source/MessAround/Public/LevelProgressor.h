@@ -17,15 +17,6 @@ class MESSAROUND_API ALevelProgressor : public AActor
 	GENERATED_BODY()
 private:
 	/// <summary>
-	/// The stages for this level
-	/// </summary>
-	UPROPERTY(EditAnywhere)
-		TArray<ULevelStage*> stages;
-	/// <summary>
-	/// The current stage we are at
-	/// </summary>
-	int currentStage = 0;
-	/// <summary>
 	/// Pointer to the current stage
 	/// </summary>
 	UPROPERTY(EditAnywhere)
@@ -53,39 +44,30 @@ private:
 	/// </summary>
 	/// <returns>Returns true if the current stage has completed</returns>
 	bool CheckStageCompletion();
+public:
 	/// <summary>
 	/// Uses a recursive search to find the stage with the given name
 	/// </summary>
 	/// <param name="stageName">The name of the stage to find</param>
 	/// <returns>Returns a pointer to the given stage</returns>
+	UFUNCTION(BlueprintCallable)
 	ULevelStage* FindStage(FString stageName);
-public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	/// <summary>
-	/// Returns the index of a stage with the given name
-	/// </summary>
-	/// <param name="stageName">The name of the stage</param>
-	/// <returns>Returns -1 if no stage was found with the given name</returns>
-	int GetStageIndex(FString stageName);
-	/// <summary>
-	/// Returns the name of a stage at the given index
-	/// </summary>
-	/// <param name="index">The index of the stage</param>
-	/// <returns>Returns an empty string if the index is invalid</returns>
-	FString GetStageName(int index);
 	/// <summary>
 	/// Returns the number of steps in the stage given by the name
 	/// </summary>
 	/// <param name="stageName">The name of the stage to get the steps for</param>
 	/// <returns>Returns -1 if the stage could not be found</returns>
-	int GetStageStepsVName(FString stageName);
+	UFUNCTION(BlueprintCallable)
+	int GetStageSteps(FString stageName);
 	/// <summary>
-	/// Returns the number of steps in the stage at the given index
+	/// Sets the current stage of the level progressor
 	/// </summary>
-	/// <param name="stageIndex">The index of the stage to get for</param>
-	/// <returns>Returns -1 if the index was invalid</returns>
-	int GetStageSteps(int stageIndex);
+	/// <param name="newStage">The stage to swap to</param>
+	/// <returns>Returns false if the newStage is nullptr</returns>
+	UFUNCTION(BlueprintCallable)
+	bool SetCurrentStage(ULevelStage* newStage);
 
 	UFUNCTION(BlueprintCallable)
 	ULevelStage* GetCurrentStage();
@@ -113,38 +95,20 @@ public:
 		void LevelEnd();
 	//Subscribe
 	UFUNCTION(BlueprintCallable)
-		void SubscribeToStageVIndex(int index, EStageType stage, FStageEnterExit func);
+		void SubscribeToStage(FString stageName, EStageType stage, FStageEnterExit func);
 
 	UFUNCTION(BlueprintCallable)
-		void SubscribeToStageVName(FString stageName, EStageType stage, FStageEnterExit func);
+		void SubscribeToStageTick(FString stageName, FStageTick tickFunc);
 
 	UFUNCTION(BlueprintCallable)
-		void SubscribeToStageTickVIndex(int index, FStageTick tickFunc);
-
-	UFUNCTION(BlueprintCallable)
-		void SubscribeToStageTickVName(FString stageName, FStageTick tickFunc);
-
-	UFUNCTION(BlueprintCallable)
-		void SubscribeToStepVIndex(int stageIndex, FStepStageChange stepFunc);
-
-	UFUNCTION(BlueprintCallable)
-		void SubscribeToStepVName(FString stageName, FStepStageChange stepFunc);
+		void SubscribeToStep(FString stageName, FStepStageChange stepFunc);
 	//Unsubscribe stuff
 	UFUNCTION(BlueprintCallable)
-		void UnsubscribeToStageVIndex(int index, EStageType stage, FStageEnterExit func);
+		void UnsubscribeToStage(FString stageName, EStageType stage, FStageEnterExit func);
 
 	UFUNCTION(BlueprintCallable)
-		void UnsubscribeToStageVName(FString stageName, EStageType stage, FStageEnterExit func);
+		void UnsubscribeToStageTick(FString stageName, FStageTick tickFunc);
 
 	UFUNCTION(BlueprintCallable)
-		void UnsubscribeToStageTickVIndex(int index, FStageTick tickFunc);
-
-	UFUNCTION(BlueprintCallable)
-		void UnsubscribeToStageTickVName(FString stageName, FStageTick tickFunc);
-
-	UFUNCTION(BlueprintCallable)
-		void UnsubscribeToStepVIndex(int stageIndex, FStepStageChange stepFunc);
-
-	UFUNCTION(BlueprintCallable)
-		void UnsubscribeToStepVName(FString stageName, FStepStageChange stepFunc);
+		void UnsubscribeToStep(FString stageName, FStepStageChange stepFunc);
 };
