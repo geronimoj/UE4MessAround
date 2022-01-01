@@ -7,6 +7,7 @@ ULevelStage::ULevelStage()
 {	//Default to 1 step
 	steps = 1;
 	completedSteps = nullptr;
+	nextStages.Empty();
 }
 
 ULevelStage::ULevelStage(FString name, int stepCount)

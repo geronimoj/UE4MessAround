@@ -25,6 +25,8 @@ private:
 	/// The initial stage
 	/// </summary>
 	ULevelStage* initial;
+
+	bool initialized;
 public:
 	// Sets default values for this actor's properties
 	ALevelProgressor();
@@ -98,6 +100,9 @@ public:
 	/// </summary>
 	UFUNCTION(BlueprintNativeEvent)
 		void LevelEnd();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void GenerateStages();
 	//Subscribe
 	UFUNCTION(BlueprintCallable)
 		void SubscribeToStage(FString stageName, EStageType stage, FStageEnterExit func);

@@ -9,8 +9,9 @@ ALevelProgressor::ALevelProgressor()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	//Instance the current stage
-	theCurrentStage = NewObject<ULevelStage>();
-	initial = theCurrentStage;
+	theCurrentStage = nullptr;
+	initial = nullptr;
+	initialized = false;
 }
 
 ALevelProgressor::~ALevelProgressor()
@@ -25,14 +26,6 @@ void ALevelProgressor::BeginPlay()
 	Super::BeginPlay();
 	//Initialize the stages
 	//Not to self, don't use the for (auto variable : TArray) for structs, it does not pass by reference
-	//Null catch
-	if (theCurrentStage == nullptr)
-	{	
-		UE_LOG(LogTemp, Warning, TEXT("Initial Stage was not initialized somehow"))
-		theCurrentStage = NewObject<ULevelStage>();
-		initial = theCurrentStage;
-	}
-	theCurrentStage->Initialize();
 }
 
 void ALevelProgressor::SwapStage()
@@ -127,7 +120,7 @@ void ALevelProgressor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	//Null catch
-	if (theCurrentStage == nullptr)
+	if (theCurrentStage == nullptr || !initialized)
 		return;
 	//Check if the stage has been completed
 	if (CheckStageCompletion())
@@ -190,6 +183,8 @@ ULevelStage* ALevelProgressor::InitializeFirstStage(FString stageName, int stepC
 	theCurrentStage = NewObject<ULevelStage>();
 	theCurrentStage->SetName(stageName);
 	theCurrentStage->SetStepCount(stepCount);
+
+	initial = theCurrentStage;
 	//Return the value
 	return theCurrentStage;
 }
@@ -206,7 +201,13 @@ void ALevelProgressor::SetCurrentStageStep(int stepIndex, bool completed)
 }
 
 void ALevelProgressor::Initialize()
-{	//Level has started
+{
+	initialized = true;
+
+	if (theCurrentStage != nullptr)
+		//Initialize the stages
+		theCurrentStage->Initialize();
+	//Level has started
 	LevelStart();
 	//If the current stage is nullptr, create one
 	if (theCurrentStage == nullptr)
@@ -225,6 +226,7 @@ void ALevelProgressor::Initialize()
 
 void ALevelProgressor::LevelStart_Implementation() {}
 void ALevelProgressor::LevelEnd_Implementation() {}
+void ALevelProgressor::GenerateStages_Implementation() {}
 
 void ALevelProgressor::SubscribeToStage(FString stageName, EStageType stage, FStageEnterExit func)
 {
