@@ -89,6 +89,10 @@ public:
 	/// <param name="step">The step to get for</param>
 	/// <returns></returns>
 	void SetCompletedStep(int step, bool completed);
+
+	void SetName(FString newName) { stageName = newName; }
+
+	void SetStepCount(int stepCount);
 	/// <summary>
 	/// Initializes this stage
 	/// </summary>

@@ -72,6 +72,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ULevelStage* GetCurrentStage();
 	/// <summary>
+	/// Initializes the first stage to be something
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	ULevelStage* InitializeFirstStage(FString stageName, int stepCount);
+	/// <summary>
 	/// Sets the state of a step inside the current stage
 	/// </summary>
 	/// <param name="stepIndex">The index of the step</param>

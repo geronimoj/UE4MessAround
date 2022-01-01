@@ -64,6 +64,24 @@ void ULevelStage::SetCompletedStep(int step, bool completed)
 		onStepChange[i].Execute(completed, step);
 }
 
+void ULevelStage::SetStepCount(int stepCount)
+{	//If the values are the same, do nothing
+	if (steps == stepCount)
+		return;
+	//Set the new value
+	steps = stepCount;
+	//If its been initialized, create a new array & copy over the data
+	if (completedSteps != nullptr)
+	{	//Create the new array
+		bool* newSteps = new bool[steps];
+		//Copy as much data over as we can
+		//Delete the old array
+		delete[] completedSteps;
+		//Store the new array
+		completedSteps = newSteps;
+	}
+}
+
 void ULevelStage::Initialize()
 {	//Create the array
 	completedSteps = new bool[steps];
