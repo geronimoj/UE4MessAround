@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/CapsuleComponent.h"
 #include "PlayerStateMachine.generated.h"
 
 UCLASS()
@@ -11,6 +12,7 @@ class APlayerStateMachine : public APawn
 {
 	GENERATED_BODY()
 
+private:
 public:
 	// Sets default values for this pawn's properties
 	APlayerStateMachine();
@@ -18,6 +20,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	FVector moveInput;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCapsuleComponent* capsule;
 	/// <summary>
 	/// Stores the players moveVector in world space
 	/// </summary>
