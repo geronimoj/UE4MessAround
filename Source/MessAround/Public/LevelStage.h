@@ -125,6 +125,7 @@ public:
 	/// Adds a preexxisting stage to be the next possible stage
 	/// </summary>
 	/// <param name="stage">The stage you wish to mark as a next stage</param>
+	UFUNCTION(BlueprintCallable)
 	void AddExistingNextStage(ULevelStage* stage);
 	/// <summary>
 	/// Subscribes to the next stage
