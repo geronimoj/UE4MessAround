@@ -178,7 +178,7 @@ ULevelStage* ALevelProgressor::GetCurrentStage()
 ULevelStage* ALevelProgressor::InitializeFirstStage(FString stageName, int stepCount)
 {	//Don't initialize something new
 	if (theCurrentStage != nullptr)
-		return nullptr;
+		return theCurrentStage;
 	//Initialize the stage
 	theCurrentStage = NewObject<ULevelStage>();
 	theCurrentStage->SetName(stageName);
