@@ -10,7 +10,7 @@ class UState;
 class Transition;
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent, BlueprintType) )
 class MESSAROUND_API UStateMachine : public UActorComponent
 {
 	GENERATED_BODY()
@@ -50,6 +50,7 @@ public:
 	/// Gets the target if its currently nullptr
 	/// </summary>
 	/// <returns></returns>
+	UFUNCTION(BlueprintPure)
 	virtual UObject* GetTarget();
 	/// <summary>
 	/// Forces the state machine to swap to a target state
@@ -63,6 +64,7 @@ public:
 	/// <summary>
 	/// Reverts to the previous state
 	/// </summary>
+	UFUNCTION(BlueprintCallable)
 	void RevertState();
 
 private:
